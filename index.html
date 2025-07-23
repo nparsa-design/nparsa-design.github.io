@@ -10,7 +10,7 @@
       background-color: #f0f4f8;
       color: #333;
       padding: 30px;
-      max-width: 800px;
+      max-width: 1000px;
       margin: auto;
     }
     h1, h2 {
@@ -20,17 +20,39 @@
       font-size: 28px;
       margin-bottom: 30px;
     }
+    .ad-banner {
+      background: #ffe9a9;
+      color: #111;
+      text-align: center;
+      padding: 20px;
+      margin: 30px 0;
+      font-weight: bold;
+      border: 2px dashed #f3b007;
+      border-radius: 10px;
+    }
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
     .news-item {
-      margin-bottom: 15px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 10px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 15px;
     }
     .news-item a {
       color: #007acc;
       text-decoration: none;
+      font-weight: bold;
+      font-size: 17px;
     }
     .news-item a:hover {
       text-decoration: underline;
+    }
+    .news-item p {
+      font-size: 14px;
+      color: #666;
     }
   </style>
 </head>
@@ -40,8 +62,13 @@
     <strong>88,300</strong> تومان
   </div>
 
+  <!-- تبلیغ -->
+  <div class="ad-banner">
+    🔥 تبلیغ شما اینجا قرار می‌گیرد | تماس بگیرید برای تبلیغات 🔥
+  </div>
+
   <h2>آخرین اخبار اقتصادی</h2>
-  <div id="news"></div>
+  <div id="news" class="news-grid"></div>
 
   <script>
     const RSS_URL = 'https://www.eghtesadonline.com/rss';
@@ -58,7 +85,7 @@
         const newsDiv = document.getElementById('news');
         newsDiv.innerHTML = '';
 
-        for (let i = 0; i < Math.min(5, items.length); i++) {
+        for (let i = 0; i < Math.min(10, items.length); i++) {
           const item = items[i];
           const title = item.querySelector("title").textContent;
           const link = item.querySelector("link").textContent;
@@ -66,7 +93,7 @@
 
           const newsItem = document.createElement('div');
           newsItem.className = 'news-item';
-          newsItem.innerHTML = `<a href="${link}" target="_blank" rel="noopener">${title}</a><p>${pubDate}</p>`;
+          newsItem.innerHTML = `<a href="${link}" target="_blank">${title}</a><p>📅 تاریخ: ${pubDate}</p>`;
           newsDiv.appendChild(newsItem);
         }
       } catch (error) {
@@ -79,4 +106,3 @@
   </script>
 </body>
 </html>
-
