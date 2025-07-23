@@ -3,27 +3,80 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8" />
-  <title>قیمت دلار امروز</title>
+  <title>قیمت دلار و اخبار اقتصادی</title>
   <meta name="google-site-verification" content="GOLkDh-XOGgwNc84h4JTCXi_qfeDui_8RaI1LyzZrJY" />
   <style>
     body {
       font-family: Tahoma, Arial, sans-serif;
       background-color: #f0f4f8;
       color: #333;
-      text-align: center;
-      padding: 50px;
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
     }
-    h1 {
+    h1, h2 {
       color: #007acc;
     }
-    p {
-      font-size: 24px;
-      margin-top: 20px;
+    .price {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    .news-item {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    .news-item a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    .news-item a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>سلام!</h1>
-  <p>قیمت دلار امروز: <strong>88,300</strong> تومان</p>
+  <h1>قیمت دلار امروز</h1>
+  <div class="price">
+    <strong>88,300</strong> تومان
+  </div>
+
+  <h2>آخرین اخبار اقتصادی</h2>
+  <div id="news"></div>
+
+  <script>
+    // آدرس RSS اقتصادی (مثال: خبرگزاری مهر - اقتصادی)
+    const RSS_URL = 'https://www.mehrnews.com/rss/Economy.xml';
+
+    // استفاده از سرویس واسط RSS to JSON (برای اینکه جاوااسکریپت بتونه بخونه)
+    const API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+
+    async function fetchNews() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+
+        const newsDiv = document.getElementById('news');
+        newsDiv.innerHTML = '';
+
+        // نمایش 5 خبر آخر
+        data.items.slice(0, 5).forEach(item => {
+          const newsItem = document.createElement('div');
+          newsItem.className = 'news-item';
+          newsItem.innerHTML = `
+            <a href="${item.link}" target="_blank" rel="noopener">${item.title}</a>
+            <p>${item.pubDate.split(' ')[0]}</p>
+          `;
+          newsDiv.appendChild(newsItem);
+        });
+      } catch (error) {
+        console.error('خطا در دریافت اخبار:', error);
+        document.getElementById('news').innerText = 'خطا در دریافت اخبار.';
+      }
+    }
+
+    fetchNews();
+  </script>
 </body>
 </html>
+
