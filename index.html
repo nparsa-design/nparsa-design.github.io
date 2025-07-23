@@ -1,1 +1,82 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <title>قیمت دلار و اخبار اقتصادی</title>
+  <meta name="google-site-verification" content="GOLkDh-XOGgwNc84h4JTCXi_qfeDui_8RaI1LyzZrJY" />
+  <style>
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background-color: #f0f4f8;
+      color: #333;
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1, h2 {
+      color: #007acc;
+    }
+    .price {
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    .news-item {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    .news-item a {
+      color: #007acc;
+      text-decoration: none;
+    }
+    .news-item a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>قیمت دلار امروز</h1>
+  <div class="price">
+    <strong>88,300</strong> تومان
+  </div>
+
+  <h2>آخرین اخبار اقتصادی</h2>
+  <div id="news"></div>
+
+  <script>
+    const RSS_URL = 'https://www.eghtesadonline.com/rss';
+    const API_URL = `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`;
+
+    async function fetchNews() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+        const items = xmlDoc.querySelectorAll("item");
+
+        const newsDiv = document.getElementById('news');
+        newsDiv.innerHTML = '';
+
+        for (let i = 0; i < Math.min(5, items.length); i++) {
+          const item = items[i];
+          const title = item.querySelector("title").textContent;
+          const link = item.querySelector("link").textContent;
+          const pubDate = item.querySelector("pubDate").textContent.split(' ')[0];
+
+          const newsItem = document.createElement('div');
+          newsItem.className = 'news-item';
+          newsItem.innerHTML = `<a href="${link}" target="_blank" rel="noopener">${title}</a><p>${pubDate}</p>`;
+          newsDiv.appendChild(newsItem);
+        }
+      } catch (error) {
+        console.error('خطا در دریافت اخبار:', error);
+        document.getElementById('news').innerText = 'خطا در دریافت اخبار.';
+      }
+    }
+
+    fetchNews();
+  </script>
+</body>
+</html>
 
